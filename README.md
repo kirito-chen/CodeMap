@@ -52,6 +52,9 @@ from codemap import build_dependency_graph, build_call_graph, build_heatmap
 graph = build_dependency_graph("./test_project")
 graph.render("deps.html")
 
+# Call tree (interactive HTML tree)
+tree_root = build_call_tree("./test_project/main.py", "start")
+
 # Call graph
 call_data = build_call_graph("./test_project/main.py", "run_server")
 print(call_data.to_mermaid())
