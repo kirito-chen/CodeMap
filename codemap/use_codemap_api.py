@@ -10,7 +10,7 @@ from codemap import build_dependency_graph, build_call_graph, build_heatmap
 PROJECT_ROOT = "../test_project"
 ENTRY_FILE = os.path.join(PROJECT_ROOT, "main.py")
 ENTRY_FUNCTION = "start"
-OUTDIR = "results"
+OUTDIR = "api_results"
 
 def test_dependency_graph():
     """1. Build and render the dependency graph."""

@@ -57,5 +57,22 @@ def heatmap(project_root, metric, output, exclude):
     hm.save(output)
     # click.echo(f"Heatmap saved to {output}")
 
+
+@cli.command()
+@click.argument("entry_file", type=click.Path(exists=True, dir_okay=False))
+@click.option("--entry", "-e", required=True, help="Entry function name (e.g., main)")
+@click.option("--format", "-f", "fmt", type=click.Choice(["mermaid", "json"]), default="mermaid",
+              help="Output format")
+def trace(entry_file, entry, fmt):
+    """Trace method calls between classes (sequence diagram)."""
+    from .trace import build_trace_graph
+    click.echo(f"Tracing method calls from {entry} in {entry_file}...")
+    graph = build_trace_graph(entry_file, entry)
+    if fmt == "mermaid":
+        click.echo(graph.to_mermaid())
+    else:
+        import json
+        click.echo(json.dumps(graph.to_json(), indent=2))
+
 if __name__ == "__main__":
     cli()
