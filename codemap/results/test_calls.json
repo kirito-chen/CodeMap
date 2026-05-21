@@ -1,0 +1,10 @@
+{
+  "root": "start",
+  "calls": {
+    "start": [
+      "multiply",
+      "greet",
+      "print"
+    ]
+  }
+}
