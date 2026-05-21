@@ -19,7 +19,144 @@
   "name": "main",
   "file": "/home/pc/data/cjq/CodeMap/complex_test_pro/main.py",
   "line": 0,
-  "children": []
+  "children": [
+    {
+      "name": "connect",
+      "file": "/home/pc/data/cjq/CodeMap/complex_test_pro/database.py",
+      "line": 0,
+      "children": []
+    },
+    {
+      "name": "create_sample_order",
+      "file": "/home/pc/data/cjq/CodeMap/complex_test_pro/order_processor.py",
+      "line": 0,
+      "children": [
+        {
+          "name": "add_item",
+          "file": "/home/pc/data/cjq/CodeMap/complex_test_pro/models.py",
+          "line": 0,
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "process_order",
+      "file": "/home/pc/data/cjq/CodeMap/complex_test_pro/order_processor.py",
+      "line": 0,
+      "children": [
+        {
+          "name": "find_by_id",
+          "file": "/home/pc/data/cjq/CodeMap/complex_test_pro/database.py",
+          "line": 0,
+          "children": [
+            {
+              "name": "select_all",
+              "file": "/home/pc/data/cjq/CodeMap/complex_test_pro/database.py",
+              "line": 0,
+              "children": [
+                {
+                  "name": "select",
+                  "file": "/home/pc/data/cjq/CodeMap/complex_test_pro/database.py",
+                  "line": 0,
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "execute",
+              "file": "/home/pc/data/cjq/CodeMap/complex_test_pro/database.py",
+              "line": 0,
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "calculate",
+          "file": "/home/pc/data/cjq/CodeMap/complex_test_pro/order_processor.py",
+          "line": 0,
+          "children": [
+            {
+              "name": "total_amount",
+              "file": "/home/pc/data/cjq/CodeMap/complex_test_pro/models.py",
+              "line": 0,
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "total_amount",
+          "file": "/home/pc/data/cjq/CodeMap/complex_test_pro/models.py",
+          "line": 0,
+          "children": []
+        },
+        {
+          "name": "_charge_payment",
+          "file": "/home/pc/data/cjq/CodeMap/complex_test_pro/order_processor.py",
+          "line": 0,
+          "children": [
+            {
+              "name": "process_payment",
+              "file": "/home/pc/data/cjq/CodeMap/complex_test_pro/payment.py",
+              "line": 0,
+              "children": [
+                {
+                  "name": "get_gateway",
+                  "file": "/home/pc/data/cjq/CodeMap/complex_test_pro/payment.py",
+                  "line": 0,
+                  "children": []
+                },
+                {
+                  "name": "pay",
+                  "file": "/home/pc/data/cjq/CodeMap/complex_test_pro/payment.py",
+                  "line": 0,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "_send_order_notifications",
+          "file": "/home/pc/data/cjq/CodeMap/complex_test_pro/order_processor.py",
+          "line": 0,
+          "children": [
+            {
+              "name": "notify",
+              "file": "/home/pc/data/cjq/CodeMap/complex_test_pro/notifications.py",
+              "line": 0,
+              "children": [
+                {
+                  "name": "send_order_confirmation",
+                  "file": "/home/pc/data/cjq/CodeMap/complex_test_pro/notifications.py",
+                  "line": 0,
+                  "children": [
+                    {
+                      "name": "_send_email",
+                      "file": "/home/pc/data/cjq/CodeMap/complex_test_pro/notifications.py",
+                      "line": 0,
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "name": "send_sms",
+                  "file": "/home/pc/data/cjq/CodeMap/complex_test_pro/notifications.py",
+                  "line": 0,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "disconnect",
+      "file": "/home/pc/data/cjq/CodeMap/complex_test_pro/database.py",
+      "line": 0,
+      "children": []
+    }
+  ]
 };
 
         // Set dimensions and margins

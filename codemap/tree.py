@@ -64,14 +64,12 @@ def _extract_calls_from_function(file_path: str, func_name: str,
 
         def visit_Call(self, node):
             if self.in_target:
-                # Extract function name
                 func_name = None
                 if isinstance(node.func, ast.Name):
                     func_name = node.func.id
                 elif isinstance(node.func, ast.Attribute):
-                    # For method calls like obj.method(), we skip for simplicity
-                    # (we only track plain function calls)
-                    pass
+                    # For method calls like obj.method(), we take the method name
+                    func_name = node.func.attr
                 if func_name and func_name in self.defined and func_name not in BUILTIN_FUNCTIONS:
                     self.calls.append(func_name)
             self.generic_visit(node)
