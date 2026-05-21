@@ -3,7 +3,7 @@
 from .deps import DependencyGraph, build_dependency_graph
 from .calls import CallGraph, build_call_graph
 from .heatmap import Heatmap, build_heatmap
-from .trace import build_trace_graph, TraceGraph
+from .tree import build_call_tree, CallTreeNode
 
 __all__ = [
     "DependencyGraph",
@@ -12,6 +12,6 @@ __all__ = [
     "build_call_graph",
     "Heatmap",
     "build_heatmap",
-    "build_trace_graph",
-    "TraceGraph",
+    "build_call_tree",
+    "CallTreeNode",
 ]
