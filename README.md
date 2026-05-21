@@ -2,7 +2,7 @@
 
 ![Recursive call tree](./images/case.png)
 
-Visualize your Python project from three aspects:
+Visualize your Python project from multiple aspects:
 - **Dependency Graph** – which modules import which
 - **Call Tree** – interactive mind‑map of nested function calls
 - **Call Graph** – function call chain starting from an entry point
