@@ -70,15 +70,15 @@ heatmap.save("heatmap.html")
 - **commits** – not implemented in this version, you can extend
 
 ## project structure
-CodeMap/
-├── setup.py                 # set up script
-├── README.md                # complete document
-├── codemap/
-│   ├── __init__.py          # Package entrance, exposing high-level APIs
-│   ├── cli.py               # Command line interface (Click)
-│   ├── deps.py              # Function 1: Dependency Graph
-│   ├── calls.py             # Function 2: Function Call Graph
-│   ├── heatmap.py           # Function 3: Code Heat Map
-│   ├── utils.py             # Public tools (traversing files, AST assistance)
-│   └── use_codemap_api.py   # use codemap api test
-└── test_project/            # Simple project
+- CodeMap/
+- ├── setup.py                 # set up script
+- ├── README.md                # complete document
+- ├── codemap/
+- │   ├── __init__.py          # Package entrance, exposing high-level APIs
+- │   ├── cli.py               # Command line interface (Click)
+- │   ├── deps.py              # Function 1: Dependency Graph
+- │   ├── calls.py             # Function 2: Function Call Graph
+- │   ├── heatmap.py           # Function 3: Code Heat Map
+- │   ├── utils.py             # Public tools (traversing files, AST assistance)
+- │   └── use_codemap_api.py   # use codemap api test
+- └── test_project/            # Simple project
