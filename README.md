@@ -1,6 +1,8 @@
 # CodeMap – Python Code Visualizer
 
-![Recursive call tree](./images/case.png)
+![Recursive call tree](./images/calltree.png)
+![dep](./images/dep.png)
+![heatmap](./images/heatmap.png)
 
 Visualize your Python project from multiple aspects:
 - **Dependency Graph** – which modules import which

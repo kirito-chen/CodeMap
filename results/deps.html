@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>CodeMap Dependency Graph</title>
+    <script type="text/javascript" src="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.js"></script>
+    <style>
+        #mynetwork {
+            width: 100%;
+            height: 750px;
+            border: 1px solid lightgray;
+        }
+    </style>
+</head>
+<body>
+    <h2>Dependency Graph</h2>
+    <div id="mynetwork"></div>
+    <script>
+        var nodes = new vis.DataSet([
+  {
+    "id": "order_processor",
+    "label": "order_processor",
+    "title": "order_processor"
+  },
+  {
+    "id": "models",
+    "label": "models",
+    "title": "models"
+  },
+  {
+    "id": "notifications",
+    "label": "notifications",
+    "title": "notifications"
+  },
+  {
+    "id": "database",
+    "label": "database",
+    "title": "database"
+  },
+  {
+    "id": "payment",
+    "label": "payment",
+    "title": "payment"
+  },
+  {
+    "id": "main",
+    "label": "main",
+    "title": "main"
+  }
+]);
+        var edges = new vis.DataSet([
+  {
+    "from": "main",
+    "to": "order_processor",
+    "arrows": "to"
+  },
+  {
+    "from": "main",
+    "to": "database",
+    "arrows": "to"
+  },
+  {
+    "from": "database",
+    "to": "models",
+    "arrows": "to"
+  },
+  {
+    "from": "order_processor",
+    "to": "models",
+    "arrows": "to"
+  },
+  {
+    "from": "order_processor",
+    "to": "notifications",
+    "arrows": "to"
+  },
+  {
+    "from": "order_processor",
+    "to": "database",
+    "arrows": "to"
+  },
+  {
+    "from": "order_processor",
+    "to": "payment",
+    "arrows": "to"
+  }
+]);
+        var container = document.getElementById('mynetwork');
+        var data = { nodes: nodes, edges: edges };
+        var options = {
+            physics: { enabled: true },
+            edges: { arrows: { to: true } }
+        };
+        var network = new vis.Network(container, data, options);
+    </script>
+</body>
+</html>
+        
