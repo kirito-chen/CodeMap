@@ -11,16 +11,12 @@ Visualize your Python project from multiple aspects:
 ![heatmap](./images/heatmap.png)
 
 ## Installation
-
+from source:
 ```bash
-pip install codemap
-```
-Or from source:
-```bash
-git clone https://github.com/kirito-chen/codemap
+git clone https://github.com/kirito-chen/CodeMap
 cd codemap
-conda create -n codemap_env python=3.9
-conda activate codemap_env
+conda create -n codemap_env python=3.9 # (optional)
+conda activate codemap_env # (optional)
 pip install -e .
 ```
 
