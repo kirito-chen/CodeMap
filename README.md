@@ -90,3 +90,6 @@ heatmap.save("heatmap.html")
 - │   ├── utils.py             # Public tools (traversing files, AST assistance)
 - │   └── use_codemap_api.py   # use codemap api test
 - └── test_project/            # Simple project
+
+## Real-world usage
+博客园使用：https://www.cnblogs.com/kirito-chen/articles/20320304
