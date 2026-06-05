@@ -1,21 +1,21 @@
-
-### 7. `codemap/heatmap.py`
-
 """Generate a heatmap showing complexity or lines of code per file."""
 
 import os
+import base64
+from io import BytesIO
 from pathlib import Path
-from typing import Dict, List, Optional, Set
+from typing import List, Optional, Set, Tuple
 
-import radon.complexity as radon_comp
-import radon.raw as radon_raw
-from jinja2 import Template
 import matplotlib
 matplotlib.use('Agg')  # Use non-interactive backend
 import matplotlib.pyplot as plt
 import numpy as np
+import radon.complexity as radon_comp
+import radon.raw as radon_raw
+from jinja2 import Template
 
 from .utils import find_python_files
+
 
 class Heatmap:
     """
@@ -24,12 +24,14 @@ class Heatmap:
     Files are sorted alphabetically and displayed as a grid of 8 columns.
     """
 
-    def __init__(self, metric_name: str, filenames: List[str], values: List[float]):
+    DEFAULT_COLS = 8
+
+    def __init__(self, metric_name: str, filenames: List[str], values: List[float]) -> None:
         self.metric_name = metric_name
         self.filenames = filenames
         self.values = values
-        self.cols = 8
-        self.rows = (len(values) + self.cols - 1) // self.cols
+        self.cols = self.DEFAULT_COLS
+        self.rows = (len(values) + self.cols - 1) // self.cols if values else 0
 
     def _make_grid(self) -> List[List[float]]:
         """Convert flat values into a 2D grid (rows x cols)."""
@@ -51,53 +53,51 @@ class Heatmap:
             grid[r][c] = short
         return grid
 
-    def save(self, output_path: str = "heatmap.html"):
-        """
-        Save as an interactive HTML page with matplotlib-generated heatmap image
-        embedded as base64, plus tooltips.
-        """
-        grid = self._make_grid()
-        labels = self._make_labels_grid()
-
-        # Plot with matplotlib
+    def _plot_to_base64(self, grid: List[List[float]]) -> str:
+        """Render heatmap with matplotlib and return base64 encoded PNG."""
         fig, ax = plt.subplots(figsize=(12, max(4, self.rows * 0.5)))
         cmap = plt.cm.viridis
         masked = np.ma.masked_where(np.isnan(grid), grid)
         im = ax.imshow(masked, cmap=cmap, aspect='auto')
 
-        # Add colorbar
+        # Colorbar
         cbar = plt.colorbar(im, ax=ax)
         cbar.set_label(self.metric_name)
 
-        # Configure ticks
+        # Ticks
         ax.set_xticks(np.arange(self.cols))
         ax.set_yticks(np.arange(self.rows))
-        ax.set_xticklabels(range(1, self.cols+1))
-        ax.set_yticklabels(range(1, self.rows+1))
+        ax.set_xticklabels(range(1, self.cols + 1))
+        ax.set_yticklabels(range(1, self.rows + 1))
 
-        # Add text annotations
+        # Annotate each cell with its value
         for i in range(self.rows):
             for j in range(self.cols):
-                if not np.isnan(grid[i, j]):
-                    text = f"{grid[i, j]:.1f}"
+                if not np.isnan(grid[i][j]):
+                    text = f"{grid[i][j]:.1f}"
                     ax.text(j, i, text, ha="center", va="center",
-                            color="white" if grid[i, j] > np.nanmax(masked)/2 else "black")
+                            color="white" if grid[i][j] > np.nanmax(masked) / 2 else "black")
 
         ax.set_title(f"Code {self.metric_name.capitalize()} Heatmap (file per cell)")
         ax.set_xlabel("Column")
         ax.set_ylabel("Row")
 
-        # Save to a temporary image and embed in HTML
-        from io import BytesIO
-        import base64
+        # Save to bytes
         img_stream = BytesIO()
         plt.tight_layout()
         plt.savefig(img_stream, format='png', dpi=100)
         img_stream.seek(0)
         img_b64 = base64.b64encode(img_stream.read()).decode('utf-8')
         plt.close(fig)
+        return img_b64
 
-        # Generate HTML with tooltips
+    def _generate_html(self, img_b64: str, labels: List[List[str]]) -> str:
+        """Generate the final HTML page with image map."""
+        # Compute approximate pixel sizes for the image map
+        # The matplotlib figure width is ~1200px, height ~800px (approx)
+        width = 1200 // self.cols
+        height = int(800 / self.rows) if self.rows else 50
+
         html_template = """
         <!DOCTYPE html>
         <html>
@@ -125,13 +125,8 @@ class Heatmap:
         </body>
         </html>
         """
-
-        # Compute approximate pixel sizes for the map (the image size from matplotlib is about 1200x? we hardcode)
-        width = 1200 // self.cols
-        height = int(800 / self.rows) if self.rows else 50
-
         tmpl = Template(html_template)
-        html = tmpl.render(
+        return tmpl.render(
             metric=self.metric_name,
             img_b64=img_b64,
             rows=self.rows,
@@ -141,12 +136,27 @@ class Heatmap:
             height=height
         )
 
+    def save(self, output_path: str = "heatmap.html") -> None:
+        """Save the heatmap as an interactive HTML page."""
+        if not self.filenames:
+            print("No data to generate heatmap.")
+            return
+
+        grid = self._make_grid()
+        labels = self._make_labels_grid()
+        img_b64 = self._plot_to_base64(grid)
+        html = self._generate_html(img_b64, labels)
+
         with open(output_path, "w", encoding="utf-8") as f:
             f.write(html)
         print(f"Heatmap saved to {output_path}")
 
 
-def build_heatmap(project_root: str, metric: str = "complexity", exclude_dirs: Set[str] = None) -> Heatmap:
+def build_heatmap(
+    project_root: str,
+    metric: str = "complexity",
+    exclude_dirs: Optional[Set[str]] = None
+) -> Heatmap:
     """
     Compute metric for each Python file and generate a heatmap.
 
@@ -162,27 +172,26 @@ def build_heatmap(project_root: str, metric: str = "complexity", exclude_dirs: S
         exclude_dirs = {'venv', 'env', '.venv', '__pycache__', 'tests', 'test', 'dist', 'build'}
 
     py_files = find_python_files(project_root, exclude_dirs)
-    filenames = []
-    values = []
+    filenames: List[str] = []
+    values: List[float] = []
 
     for f in py_files:
         try:
             with open(f, "r", encoding="utf-8") as src:
                 content = src.read()
-        except:
+        except (IOError, OSError, UnicodeDecodeError):
             continue
 
         if metric == "complexity":
-            # Use radon to compute cyclomatic complexity
             try:
                 blocks = radon_comp.cc_visit(content)
                 total_complexity = sum(b.complexity for b in blocks)
                 values.append(float(total_complexity))
                 filenames.append(f)
-            except:
-                pass
+            except Exception:
+                # Skip files that cannot be parsed
+                continue
         elif metric == "lines":
-            # Count non-empty, non-comment lines
             raw = radon_raw.analyze(content)
             values.append(float(raw.loc))
             filenames.append(f)
@@ -191,6 +200,12 @@ def build_heatmap(project_root: str, metric: str = "complexity", exclude_dirs: S
 
     # Sort by filename for consistent order
     paired = sorted(zip(filenames, values), key=lambda x: x[0])
-    filenames, values = zip(*paired) if paired else ([], [])
+    if paired:
+        filenames, values = zip(*paired)
+        filenames = list(filenames)
+        values = list(values)
+    else:
+        filenames = []
+        values = []
 
-    return Heatmap(metric, list(filenames), list(values))
+    return Heatmap(metric, filenames, values)
